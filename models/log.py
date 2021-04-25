@@ -16,6 +16,6 @@ class Log(BaseModel):
 
         order_by: OrderBy=OrderBy.TimestampAsc
 
-    id: str
+    id: str=None
     application_id: str
     timestamp: str=None

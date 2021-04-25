@@ -36,7 +36,7 @@ class Function(BaseModel):
     class Config:
         use_enum_values = True
 
-    id: str
+    id: str=None
     name: str=None
     status: str=None
     organization_id: str

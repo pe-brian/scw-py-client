@@ -24,13 +24,16 @@ class ScalewayAPI:
         }
 
     def _request(self, url, method="GET", data={}):
-        assert method in ("GET", "POST", "PATCH")
         if method == "GET":
             res = requests.get(self.api_url + url, headers=self.headers, params=data)
         elif method == "POST":
             res = requests.post(self.api_url + url, headers=self.headers, data=json.dumps(data))
         elif method == "PATCH":
             res = requests.patch(self.api_url + url, headers=self.headers, data=json.dumps(data))
+        elif method == "DELETE":
+            res = requests.patch(self.api_url + url, headers=self.headers)
+        else:
+            raise Exception(f"Unhandled method: {method}")
         res.raise_for_status()
         return json.dumps(res.json(), indent=4, sort_keys=True)
 
@@ -60,6 +63,14 @@ class ScalewayAPI:
     def deploy_container(self, id: str):
         return Container(**json.loads(self._request(f"/containers/{id}/deploy", method="POST")))
 
+    @validate_arguments
+    def update_container(self, container: Container):
+        return Container(**json.loads(self._request(f"/containers/{container.id}", method="PATCH", data=container.dict())))
+
+    @validate_arguments
+    def delete_container(self, container: Container):
+        return Container(**json.loads(self._request(f"/containers/{container.id}", method="DELETE", data=container.dict())))
+
     ### NAMESPACES ###
 
     @validate_arguments
@@ -81,6 +92,14 @@ class ScalewayAPI:
     def create_namespace(self, namespace: Namespace):
         return Namespace(**json.loads(self._request(f"/namespaces", method="POST", data=namespace.dict())))
 
+    @validate_arguments
+    def update_namespace(self, namespace: Namespace):
+        return Namespace(**json.loads(self._request(f"/namespaces/{namespace.id}", method="PATCH", data=namespace.dict())))
+
+    @validate_arguments
+    def delete_namespace(self, namespace: Namespace):
+        return Namespace(**json.loads(self._request(f"/namespaces/{namespace.id}", method="DELETE", data=namespace.dict())))
+
     ### FUNCTIONS ###
 
     @validate_arguments
@@ -100,8 +119,16 @@ class ScalewayAPI:
         return Function(**json.loads(self._request(f"/functions/{id}")))
 
     @validate_arguments
-    def create_function(self, namespace: Namespace):
+    def create_function(self, function: Function):
         return Function(**json.loads(self._request(f"/functions", method="POST", data=function.dict())))
+
+    @validate_arguments
+    def update_function(self, function: Function):
+        return Function(**json.loads(self._request(f"/functions/{function.id}", method="PATCH", data=function.dict())))
+
+    @validate_arguments
+    def delete_function(self, function: Function):
+        return Function(**json.loads(self._request(f"/functions/{function.id}", method="DELETE", data=function.dict())))
 
     ### CRONS ###
 
@@ -120,8 +147,16 @@ class ScalewayAPI:
         return Cron(**json.loads(self._request(f"/crons/{id}")))
 
     @validate_arguments
-    def create_cron(self, namespace: Namespace):
+    def create_cron(self, cron: Cron):
         return Cron(**json.loads(self._request(f"/crons", method="POST", data=cron.dict())))
+
+    @validate_arguments
+    def update_cron(self, cron: Cron):
+        return Cron(**json.loads(self._request(f"/crons/{cron.id}", method="PATCH", data=cron.dict())))
+
+    @validate_arguments
+    def delete_cron(self, cron: Cron):
+        return Cron(**json.loads(self._request(f"/crons/{cron.id}", method="DELETE", data=cron.dict())))
 
     ### LOGS ###
 

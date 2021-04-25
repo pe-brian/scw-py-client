@@ -16,7 +16,7 @@ class Cron(BaseModel):
 
         order_by: OrderBy=OrderBy.CreatedAtAsc
 
-    id: str
+    id: str=None
     application_id: str
     schedule: str
     args: Dict[str, Any]=None

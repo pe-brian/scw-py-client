@@ -27,6 +27,7 @@ class Container(BaseModel):
     class Config:  
         use_enum_values=True
 
+    id: str=None
     namespace_id: str
     name: str
     timeout: int

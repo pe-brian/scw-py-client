@@ -18,7 +18,7 @@ class Namespace(BaseModel):
 
         order_by: OrderBy=OrderBy.CreatedAtAsc
 
-    id: str
+    id: str=None
     name: str=None
     organization_id: str
     description: str=None
