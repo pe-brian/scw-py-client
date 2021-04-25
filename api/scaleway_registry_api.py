@@ -9,8 +9,8 @@ from pydantic import validate_arguments, ValidationError
 
 class ScalewayRegistryAPI(ScalewayAPI):
 
-    def __init__(self, version: str, region: str="fr-par"):
-        super().__init__(name="registry", version=version, region=region)
+    def __init__(self, region: str="fr-par"):
+        super().__init__(name="registry", version="v1", region=region)
 
     ### IMAGES ###
 

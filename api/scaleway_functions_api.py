@@ -13,8 +13,8 @@ from pydantic import validate_arguments, ValidationError
 
 class ScalewayFunctionsAPI(ScalewayAPI):
 
-    def __init__(self, version: str, region: str="fr-par"):
-        super().__init__(name="functions", version=version, region=region)
+    def __init__(self, region: str="fr-par"):
+        super().__init__(name="functions", version="v1alpha2", region=region)
 
     ### CONTAINERS ###
 
