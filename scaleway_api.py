@@ -123,6 +123,10 @@ class ScalewayAPI:
         return Function(**json.loads(self._request(f"/functions", method="POST", data=function.dict())))
 
     @validate_arguments
+    def deploy_function(self, function: Function):
+        return Function(**json.loads(self._request(f"/functions/{function.id}/deploy", method="POST", data=function.dict())))
+
+    @validate_arguments
     def update_function(self, function: Function):
         return Function(**json.loads(self._request(f"/functions/{function.id}", method="PATCH", data=function.dict())))
 
