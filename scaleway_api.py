@@ -5,6 +5,8 @@ from models.container import Container
 from models.pagination import Pagination
 from models.namespace import Namespace
 from models.function import Function
+from models.cron import Cron
+from models.log import Log
 from pydantic import validate_arguments, ValidationError
 
 class ScalewayAPI:
@@ -100,3 +102,35 @@ class ScalewayAPI:
     @validate_arguments
     def create_function(self, namespace: Namespace):
         return Function(**json.loads(self._request(f"/functions", method="POST", data=function.dict())))
+
+    ### CRONS ###
+
+    @validate_arguments
+    def list_crons(
+        self,
+        pagination: Pagination=Pagination(),
+        ordering: Cron.Ordering=Cron.Ordering(),
+        application_id: str=None):
+        return [ Cron(**data) for data in json.loads(
+            self._request(f"/crons", data={
+                "application_id": application_id} | pagination.dict() | ordering.dict()))["crons"] ]
+
+    @validate_arguments
+    def get_cron(self, id: str):
+        return Cron(**json.loads(self._request(f"/crons/{id}")))
+
+    @validate_arguments
+    def create_cron(self, namespace: Namespace):
+        return Cron(**json.loads(self._request(f"/crons", method="POST", data=cron.dict())))
+
+    ### LOGS ###
+
+    @validate_arguments
+    def list_logs(
+        self,
+        pagination: Pagination=Pagination(),
+        ordering: Log.Ordering=Log.Ordering(),
+        application_id: str=None):
+        return [ Log(**data) for data in json.loads(
+            self._request(f"/logs", data={
+                "application_id": application_id} | pagination.dict() | ordering.dict()))["logs"] ]
