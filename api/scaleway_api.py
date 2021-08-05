@@ -1,11 +1,11 @@
 import requests
 import json
 import os
-from pydantic import validate_arguments, ValidationError
+
 
 class ScalewayAPI:
 
-    def __init__(self, name: str, version: str, region: str="fr-par"):
+    def __init__(self, name: str, version: str, region: str = "fr-par"):
         token = os.getenv("SCALEWAY_API_TOKEN")
         if not token:
             raise Exception("SCALEWAY_API_TOKEN must be defined as environment variable")

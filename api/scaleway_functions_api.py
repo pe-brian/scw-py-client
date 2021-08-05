@@ -1,6 +1,4 @@
-import requests
 import json
-import os
 from models.pagination import Pagination
 from models.functions.container import Container
 from models.functions.namespace import Namespace
@@ -8,27 +6,28 @@ from models.functions.function import Function
 from models.functions.cron import Cron
 from models.functions.log import Log
 from .scaleway_api import ScalewayAPI
-from pydantic import validate_arguments, ValidationError
+from pydantic import validate_arguments
 
 
 class ScalewayFunctionsAPI(ScalewayAPI):
 
-    def __init__(self, region: str="fr-par"):
+    def __init__(self, region: str = "fr-par"):
         super().__init__(name="functions", version="v1alpha2", region=region)
 
-    ### CONTAINERS ###
+    # CONTAINERS
 
     @validate_arguments
     def list_containers(
         self,
-        namespace_id: str=None,
-        pagination: Pagination=Pagination(),
-        ordering: Container.Ordering=Container.Ordering(),
-        name: str=None,
-        organization_id: str=None):
-        return [ Container(**data) for data in json.loads(
+        namespace_id: str = None,
+        pagination: Pagination = Pagination(),
+        ordering: Container.Ordering = Container.Ordering(),
+        name: str = None,
+        organization_id: str = None
+    ): return [Container(**data) for data in json.loads(
             self.request(f"/containers", data={
-                "name": name, "namespace_id": namespace_id, "organization_id": organization_id} | pagination.dict() | ordering.dict()))["containers"] ]
+                "name": name, "namespace_id": namespace_id,
+                "organization_id": organization_id} | pagination.dict() | ordering.dict()))["containers"]]
 
     @validate_arguments
     def get_container(self, id: str):
@@ -43,8 +42,8 @@ class ScalewayFunctionsAPI(ScalewayAPI):
         return Container(**json.loads(self.request(f"/containers/{id}/deploy", method="POST")))
 
     @validate_arguments
-    def update_container(self, container: Container):
-        return Container(**json.loads(self.request(f"/containers/{container.id}", method="PATCH", data=container.dict())))
+    def update_container(self, id, **params):
+        return Container(**json.loads(self.request(f"/containers/{id}", method="PATCH", data={**params})))
 
     @validate_arguments
     def delete_container(self, container: Container):
