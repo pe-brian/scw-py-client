@@ -1,4 +1,4 @@
-# Scaleway-Client
+# Scaleway-Py-Client
 
 ## Rdb :
 
