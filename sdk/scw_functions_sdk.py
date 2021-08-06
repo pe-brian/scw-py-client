@@ -44,8 +44,8 @@ class ScwFunctionsSDK(ScwSDK):
         return Container(**json.loads(self.request(f"/containers/{id}/deploy", method="POST")))
 
     @validate_arguments
-    def update_container(self, id, **params):
-        return Container(**json.loads(self.request(f"/containers/{id}", method="PATCH", data={**params})))
+    def update_container(self, id, container: Container):
+        return Container(**json.loads(self.request(f"/containers/{id}", method="PATCH", data=container.dict())))
 
     @validate_arguments
     def delete_container(self, container: Container):
