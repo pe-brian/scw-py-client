@@ -88,3 +88,8 @@ if __name__ == "__main__":
     functions_api = ScwFunctionsSDK()
     containers = functions_api.list_containers()
 ```
+
+## Object Storage :
+
+- list buckets
+- create a bucket
