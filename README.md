@@ -14,7 +14,7 @@
 from scw_py_client.models.rdb import Privileges, User, Database
 from scw_py_client.core import RdbClient
 
-rdbClient = Client.Rdb()
+rdbClient = RdbClient()
 
 instances = rdbClient.list_instances()
 instance = instances[0]
