@@ -2,6 +2,7 @@ from models.region import Region
 from typing import List
 from pydantic import BaseModel
 from enum import Enum
+from datetime import datetime
 
 
 class Instance(BaseModel):
@@ -31,5 +32,5 @@ class Instance(BaseModel):
     name: str = None
     status: str
     status_message: str = None
-    created_at: str
+    created_at: datetime
     tags: List[str]

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 from pydantic import BaseModel
 from enum import Enum
@@ -35,6 +36,6 @@ class Image(BaseModel):
     status_message: str = None
     visibility: str
     size: int
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
     tags: List[str]
