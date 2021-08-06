@@ -1,13 +1,13 @@
-# from api.scaleway_registry_api import ScalewayRegistryAPI
-# from api.scaleway_functions_api import ScalewayFunctionsAPI
-from api.scaleway_database_api import ScalewayDataBaseAPI
+# from api.scw_registry_api import ScwRegistryAPI
+# from api.scw_functions_api import ScwFunctionsAPI
+from api.scw_database_sdk import ScwDataBaseSDK
 
 if __name__ == "__main__":
 
-    # registry_api = ScalewayRegistryAPI()
+    # registry_api = ScwRegistryAPI()
     # print(registry_api.list_images())
 
-    # functions_api = ScalewayFunctionsAPI()
+    # functions_api = ScwFunctionsAPI()
     # containers = functions_api.list_containers()
     # print(containers)
     # container.timeout = 20000
@@ -19,5 +19,5 @@ if __name__ == "__main__":
     # for log in logs:
     #     print(f"{log.message}")
 
-    database_api = ScalewayDataBaseAPI()
+    database_api = ScwDataBaseSDK()
     print(database_api.list_instances())

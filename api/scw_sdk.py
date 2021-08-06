@@ -3,13 +3,13 @@ import json
 import os
 
 
-class ScalewayAPI:
+class ScwSDK:
 
     def __init__(self, name: str, version: str, region: str = "fr-par"):
-        token = os.getenv("SCALEWAY_API_TOKEN")
+        token = os.getenv("SCW_API_SECRET_KEY")
         if not token:
-            raise Exception("SCALEWAY_API_TOKEN must be defined as environment variable")
-        self.api_url = f"https://api.scaleway.com/{name}/{version}/regions/{region}"
+            raise Exception("SCW_API_SECRET_KEY must be defined as environment variable")
+        self.API_url = f"https://api.scaleway.com/{name}/{version}/regions/{region}"
         self.headers = {
             "accept": "application/json",
             "X-Auth-Token": token,
@@ -18,13 +18,13 @@ class ScalewayAPI:
 
     def request(self, url, method="GET", data={}):
         if method == "GET":
-            res = requests.get(self.api_url + url, headers=self.headers, params=data)
+            res = requests.get(self.API_url + url, headers=self.headers, params=data)
         elif method == "POST":
-            res = requests.post(self.api_url + url, headers=self.headers, data=json.dumps(data))
+            res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(data))
         elif method == "PATCH":
-            res = requests.patch(self.api_url + url, headers=self.headers, data=json.dumps(data))
+            res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(data))
         elif method == "DELETE":
-            res = requests.patch(self.api_url + url, headers=self.headers)
+            res = requests.patch(self.API_url + url, headers=self.headers)
         else:
             raise Exception(f"Unhandled method: {method}")
         if not res.ok:

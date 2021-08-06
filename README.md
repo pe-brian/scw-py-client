@@ -1,1 +1,1 @@
-# scaleway-api
+# scw-api

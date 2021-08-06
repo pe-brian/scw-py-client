@@ -5,11 +5,11 @@ from models.functions.namespace import Namespace
 from models.functions.function import Function
 from models.functions.cron import Cron
 from models.functions.log import Log
-from .scaleway_api import ScalewayAPI
+from .scw_sdk import ScwSDK
 from pydantic import validate_arguments
 
 
-class ScalewayFunctionsAPI(ScalewayAPI):
+class ScwFunctionsSDK(ScwSDK):
 
     def __init__(self, region: str = "fr-par"):
         super().__init__(name="functions", version="v1alpha2", region=region)
@@ -25,8 +25,9 @@ class ScalewayFunctionsAPI(ScalewayAPI):
         name: str = None,
         organization_id: str = None
     ): return [Container(**data) for data in json.loads(
-            self.request(f"/containers", data={
-                "name": name, "namespace_id": namespace_id,
+            self.request("/containers", data={
+                "name": name,
+                "namespace_id": namespace_id,
                 "organization_id": organization_id} | pagination.dict() | ordering.dict()))["containers"]]
 
     @validate_arguments
@@ -35,7 +36,7 @@ class ScalewayFunctionsAPI(ScalewayAPI):
 
     @validate_arguments
     def create_container(self, container: Container):
-        return Container(**json.loads(self.request(f"/containers", method="POST", data=container.dict())))
+        return Container(**json.loads(self.request("/containers", method="POST", data=container.dict())))
 
     @validate_arguments
     def deploy_container(self, id: str):
@@ -47,20 +48,21 @@ class ScalewayFunctionsAPI(ScalewayAPI):
 
     @validate_arguments
     def delete_container(self, container: Container):
-        return Container(**json.loads(self.request(f"/containers/{container.id}", method="DELETE", data=container.dict())))
+        return Container(**json.loads(self.request(
+            f"/containers/{container.id}", method="DELETE", data=container.dict())))
 
-    ### NAMESPACES ###
+    # NAMESPACES
 
     @validate_arguments
     def list_namespaces(
         self,
-        pagination: Pagination=Pagination(),
-        ordering: Namespace.Ordering=Namespace.Ordering(),
-        name: str=None,
-        organization_id: str=None):
-        return [ Namespace(**data) for data in json.loads(
-            self.request(f"/namespaces", data={
-                "name": name, "organization_id": organization_id} | pagination.dict() | ordering.dict()))["namespaces"] ]
+        pagination: Pagination = Pagination(),
+        ordering: Namespace.Ordering = Namespace.Ordering(),
+        name: str = None,
+        organization_id: str = None
+    ): return [Namespace(**data) for data in json.loads(
+            self.request("/namespaces", data={
+                "name": name, "organization_id": organization_id} | pagination.dict() | ordering.dict()))["namespaces"]]
 
     @validate_arguments
     def get_namespace(self, id: str):
@@ -68,29 +70,32 @@ class ScalewayFunctionsAPI(ScalewayAPI):
 
     @validate_arguments
     def create_namespace(self, namespace: Namespace):
-        return Namespace(**json.loads(self.request(f"/namespaces", method="POST", data=namespace.dict())))
+        return Namespace(**json.loads(self.request("/namespaces", method="POST", data=namespace.dict())))
 
     @validate_arguments
     def update_namespace(self, namespace: Namespace):
-        return Namespace(**json.loads(self.request(f"/namespaces/{namespace.id}", method="PATCH", data=namespace.dict())))
+        return Namespace(**json.loads(
+            self.request(f"/namespaces/{namespace.id}", method="PATCH", data=namespace.dict())))
 
     @validate_arguments
     def delete_namespace(self, namespace: Namespace):
-        return Namespace(**json.loads(self.request(f"/namespaces/{namespace.id}", method="DELETE", data=namespace.dict())))
+        return Namespace(**json.loads(
+            self.request(f"/namespaces/{namespace.id}", method="DELETE", data=namespace.dict())))
 
-    ### FUNCTIONS ###
+    # FUNCTIONS
 
     @validate_arguments
     def list_functions(
         self,
-        pagination: Pagination=Pagination(),
-        ordering: Function.Ordering=Function.Ordering(),
-        name: str=None,
-        namespace_id: str=None,
-        organization_id: str=None):
-        return [ Function(**data) for data in json.loads(
-            self.request(f"/functions", data={
-                "name": name, "namespace_id": namespace_id, "organization_id": organization_id} | pagination.dict() | ordering.dict()))["functions"] ]
+        pagination: Pagination = Pagination(),
+        ordering: Function.Ordering = Function.Ordering(),
+        name: str = None,
+        namespace_id: str = None,
+        organization_id: str = None
+    ): return [Function(**data) for data in json.loads(
+            self.request("/functions", data={
+                "name": name, "namespace_id": namespace_id, "organization_id": organization_id
+                    } | pagination.dict() | ordering.dict()))["functions"]]
 
     @validate_arguments
     def get_function(self, id: str):
@@ -98,11 +103,12 @@ class ScalewayFunctionsAPI(ScalewayAPI):
 
     @validate_arguments
     def create_function(self, function: Function):
-        return Function(**json.loads(self.request(f"/functions", method="POST", data=function.dict())))
+        return Function(**json.loads(self.request("/functions", method="POST", data=function.dict())))
 
     @validate_arguments
     def deploy_function(self, function: Function):
-        return Function(**json.loads(self.request(f"/functions/{function.id}/deploy", method="POST", data=function.dict())))
+        return Function(**json.loads(self.request(
+            f"/functions/{function.id}/deploy", method="POST", data=function.dict())))
 
     @validate_arguments
     def update_function(self, function: Function):
@@ -112,17 +118,17 @@ class ScalewayFunctionsAPI(ScalewayAPI):
     def delete_function(self, function: Function):
         return Function(**json.loads(self.request(f"/functions/{function.id}", method="DELETE", data=function.dict())))
 
-    ### CRONS ###
+    # CRONS
 
     @validate_arguments
     def list_crons(
         self,
-        pagination: Pagination=Pagination(),
-        ordering: Cron.Ordering=Cron.Ordering(),
-        application_id: str=None):
-        return [ Cron(**data) for data in json.loads(
-            self.request(f"/crons", data={
-                "application_id": application_id} | pagination.dict() | ordering.dict()))["crons"] ]
+        pagination: Pagination = Pagination(),
+        ordering: Cron.Ordering = Cron.Ordering(),
+        application_id: str = None
+    ): return [Cron(**data) for data in json.loads(
+            self.request("/crons", data={
+                "application_id": application_id} | pagination.dict() | ordering.dict()))["crons"]]
 
     @validate_arguments
     def get_cron(self, id: str):
@@ -130,7 +136,7 @@ class ScalewayFunctionsAPI(ScalewayAPI):
 
     @validate_arguments
     def create_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request(f"/crons", method="POST", data=cron.dict())))
+        return Cron(**json.loads(self.request("/crons", method="POST", data=cron.dict())))
 
     @validate_arguments
     def update_cron(self, cron: Cron):
@@ -140,14 +146,14 @@ class ScalewayFunctionsAPI(ScalewayAPI):
     def delete_cron(self, cron: Cron):
         return Cron(**json.loads(self.request(f"/crons/{cron.id}", method="DELETE", data=cron.dict())))
 
-    ### LOGS ###
+    # LOGS
 
     @validate_arguments
     def list_logs(
         self,
-        pagination: Pagination=Pagination(),
-        ordering: Log.Ordering=Log.Ordering(),
-        application_id: str=None):
-        return [ Log(**data) for data in json.loads(
-            self.request(f"/logs", data={
-                "application_id": application_id} | pagination.dict() | ordering.dict()))["logs"] ]
+        pagination: Pagination = Pagination(),
+        ordering: Log.Ordering = Log.Ordering(),
+        application_id: str = None
+    ): return [Log(**data) for data in json.loads(
+            self.request("/logs", data={
+                "application_id": application_id} | pagination.dict() | ordering.dict()))["logs"]]
