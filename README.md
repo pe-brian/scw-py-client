@@ -21,10 +21,10 @@ instance = instances[0]
 
 test_database = rdb.create_database(instance=instance, database=Database(name="test_database"))
 test_user = rdb.create_user(
-    instance=instance, user=User(name="test_user"), password=User.Password("!8Aa126dsds"))
+    instance=instance, user=User(name="test_user"), password=User.Password("password"))
 rdb.set_user_privileges(instance=instance, privileges=Privileges(
     database_name=test_database.name, user_name=test_user.name, permission=Privileges.Permission.ReadWrite))
-test_user = rdb.update_user(instance=instance, user=test_user, password=User.Password("@8Aa126dsds"))
+test_user = rdb.update_user(instance=instance, user=test_user, password=User.Password("password"))
 rdb.delete_user(instance=instances[0], user=test_user)
 rdb.delete_database(instance=instance, database=test_database)
 ```
@@ -86,5 +86,5 @@ from scw_sdk.core import ObjectStorageSDK
 
 object_storage = sdk.ObjectStorage()
 buckets = object_storage.list_buckets()
-bucket = object_storage.create_bucket("shoptero")
+bucket = object_storage.create_bucket("my_bucket_name")
 ```
