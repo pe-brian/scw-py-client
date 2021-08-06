@@ -1,5 +1,7 @@
-from typing import Any, Dict
 from .models.region import Region
+
+from typing import Any, Dict
+
 import requests
 import json
 import os

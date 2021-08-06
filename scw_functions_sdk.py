@@ -1,13 +1,15 @@
-import json
-from models.region import Region
-from models.pagination import Pagination
-from models.functions.container import Container
-from models.functions.namespace import Namespace
-from models.functions.function import Function
-from models.functions.cron import Cron
-from models.functions.log import Log
-from scw_sdk import ScwSDK
+from .models.region import Region
+from .models.pagination import Pagination
+from .models.functions.container import Container
+from .models.functions.namespace import Namespace
+from .models.functions.function import Function
+from .models.functions.cron import Cron
+from .models.functions.log import Log
+from .scw_sdk import ScwSDK
+
 from pydantic import validate_arguments
+
+import json
 
 
 class ScwFunctionsSDK(ScwSDK):

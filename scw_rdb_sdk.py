@@ -1,13 +1,15 @@
-import json
-from models.rdb.privileges import Privileges
-from models.rdb.user import User
-from models.region import Region
-from models.rdb.database import Database
-from models.rdb.instance import Instance
-from models.pagination import Pagination
+from .models.rdb.privileges import Privileges
+from .models.rdb.user import User
+from .models.region import Region
+from .models.rdb.database import Database
+from .models.rdb.instance import Instance
+from .models.pagination import Pagination
 from .scw_sdk import ScwSDK
+
 from pydantic import validate_arguments
+
 import requests
+import json
 
 
 class ScwRdbSDK(ScwSDK):

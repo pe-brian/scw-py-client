@@ -1,9 +1,11 @@
-import json
-from models.region import Region
-from models.registry.image import Image
-from models.pagination import Pagination
+from .models.region import Region
+from .models.registry.image import Image
+from .models.pagination import Pagination
 from .scw_sdk import ScwSDK
+
 from pydantic import validate_arguments
+
+import json
 
 
 class ScwRegistrySDK(ScwSDK):
