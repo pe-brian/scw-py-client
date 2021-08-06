@@ -1,4 +1,3 @@
-from models.region import Region
 from typing import List
 from pydantic import BaseModel
 from enum import Enum
@@ -28,7 +27,6 @@ class Instance(BaseModel):
         use_enum_values = True
 
     id: str
-    region: Region = Region.FrPar
     name: str = None
     status: str
     status_message: str = None

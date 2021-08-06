@@ -1,4 +1,5 @@
 import json
+from models.region import Region
 from models.pagination import Pagination
 from models.functions.container import Container
 from models.functions.namespace import Namespace
@@ -11,7 +12,7 @@ from pydantic import validate_arguments
 
 class ScwFunctionsSDK(ScwSDK):
 
-    def __init__(self, region: str = "fr-par"):
+    def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="functions", version="v1alpha2", region=region)
 
     # CONTAINERS

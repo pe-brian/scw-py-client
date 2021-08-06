@@ -1,4 +1,5 @@
 import json
+from models.region import Region
 from models.registry.image import Image
 from models.pagination import Pagination
 from .scw_sdk import ScwSDK
@@ -7,7 +8,7 @@ from pydantic import validate_arguments
 
 class ScwRegistrySDK(ScwSDK):
 
-    def __init__(self, region: str = "fr-par"):
+    def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="registry", version="v1", region=region)
 
     # IMAGES

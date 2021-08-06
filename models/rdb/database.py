@@ -21,8 +21,7 @@ class Database(BaseModel):
     class Config:
         use_enum_values = True
 
-    id: str
     name: str = None
     owner: str = None
-    status: str
-    size: int
+    status: str = None
+    size: int = None

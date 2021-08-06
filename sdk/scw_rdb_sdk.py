@@ -1,4 +1,5 @@
 import json
+from models.region import Region
 from models.rdb.database import Database
 from models.rdb.instance import Instance
 from models.pagination import Pagination
@@ -8,10 +9,10 @@ from pydantic import validate_arguments
 
 class ScwRdbSDK(ScwSDK):
 
-    def __init__(self, region: str = "fr-par"):
+    def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="rdb", version="v1", region=region)
 
-    # INSTANCES #
+    # INSTANCES
 
     @validate_arguments
     def list_instances(
@@ -27,6 +28,8 @@ class ScwRdbSDK(ScwSDK):
                 "project_id": project_id,
                 "name": name} | pagination.dict() | ordering.dict()))["instances"]]
 
+    # DATABASES
+
     @validate_arguments
     def list_databases(
         self,
@@ -41,3 +44,13 @@ class ScwRdbSDK(ScwSDK):
                 "owner": owner,
                 "managed": managed,
                 "name": name} | pagination.dict() | ordering.dict()))["databases"]]
+
+    @validate_arguments
+    def create_database(self, instance: Instance, database: Database):
+        return Database(**json.loads(self.request(
+            f"/instances/{instance.id}/databases", method="POST", data=database.dict())))
+
+    @validate_arguments
+    def delete_database(self, instance: Instance, database: Database):
+        self.request(
+            f"/instances/{instance.id}/databases/{database.name}", method="DELETE", data=database.dict())
