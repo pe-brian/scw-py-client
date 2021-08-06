@@ -8,7 +8,7 @@ import os
 from enum import Enum
 
 
-class ScwAPI:
+class BaseAPI:
 
     class Method(Enum):
         GET = "GET"
@@ -34,22 +34,22 @@ class ScwAPI:
         }
 
     def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}):
-        print(json.dumps(ScwAPI._clean_dict(data)))
-        if method == ScwAPI.Method.GET:
+        print(json.dumps(BaseAPI._clean_dict(data)))
+        if method == BaseAPI.Method.GET:
             res = requests.get(self.API_url + url, headers=self.headers, params=data)
-        elif method == ScwAPI.Method.POST:
-            res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(ScwAPI._clean_dict(data)))
-        elif method == ScwAPI.Method.PATCH:
-            res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(ScwAPI._clean_dict(data)))
-        elif method == ScwAPI.Method.DELETE:
+        elif method == BaseAPI.Method.POST:
+            res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
+        elif method == BaseAPI.Method.PATCH:
+            res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
+        elif method == BaseAPI.Method.DELETE:
             res = requests.delete(self.API_url + url, headers=self.headers)
-        elif method == ScwAPI.Method.PUT:
-            res = requests.put(self.API_url + url, headers=self.headers, data=json.dumps(ScwAPI._clean_dict(data)))
+        elif method == BaseAPI.Method.PUT:
+            res = requests.put(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
         else:
             raise Exception(f"Unhandled method: {method}")
         if not res.ok:
-            raise ScwAPI.Error(res.json()["message"])
-        if method != ScwAPI.Method.DELETE:
+            raise BaseAPI.Error(res.json()["message"])
+        if method != BaseAPI.Method.DELETE:
             return json.dumps(res.json(), indent=4, sort_keys=True)
 
     @classmethod

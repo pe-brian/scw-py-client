@@ -1,6 +1,6 @@
-# scaleway-SDK
+# Scaleway-SDK
 
-## Databases (Rdb) :
+## Rdb :
 
 - list_instances
 - create_database
@@ -11,24 +11,22 @@
 - delete_database
 
 ```python
-from models.rdb.privileges import Privileges
-from models.rdb.user import User
-from models.rdb.database import Database
-from scw_rdb_sdk import ScwRdbSDK
+from scw_sdk.models.rdb import Privileges, User, Database
+from scw_sdk.core import RdbSDK
 
-rdb_sdk = ScwRdbSDK()
+rdb = sdk.Rdb()
 
-instances = rdb_sdk.list_instances()
+instances = rdb.list_instances()
 instance = instances[0]
 
-test_database = rdb_sdk.create_database(instance=instance, database=Database(name="test_database"))
-test_user = rdb_sdk.create_user(
+test_database = rdb.create_database(instance=instance, database=Database(name="test_database"))
+test_user = rdb.create_user(
     instance=instance, user=User(name="test_user"), password=User.Password("!8Aa126dsds"))
-rdb_sdk.set_user_privileges(instance=instance, privileges=Privileges(
+rdb.set_user_privileges(instance=instance, privileges=Privileges(
     database_name=test_database.name, user_name=test_user.name, permission=Privileges.Permission.ReadWrite))
-test_user = rdb_sdk.update_user(instance=instance, user=test_user, password=User.Password("@8Aa126dsds"))
-rdb_sdk.delete_user(instance=instances[0], user=test_user)
-rdb_sdk.delete_database(instance=instance, database=test_database)
+test_user = rdb.update_user(instance=instance, user=test_user, password=User.Password("@8Aa126dsds"))
+rdb.delete_user(instance=instances[0], user=test_user)
+rdb.delete_database(instance=instance, database=test_database)
 ```
 
 ## Registry :
@@ -39,10 +37,10 @@ rdb_sdk.delete_database(instance=instance, database=test_database)
 - delete_image
 
 ```python
-from scw_registry_sdk import ScwRegistrySDK
+from scw_sdk.core import RegistrySDK
 
-registry_api = ScwRegistrySDK()
-images = registry_api.list_images()
+registry = RegistrySDK()
+images = registry.list_images()
 ```
 
 ## Functions :
@@ -72,10 +70,10 @@ images = registry_api.list_images()
 - list_logs
 
 ```python
-from scw_functions_sdk import ScwFunctionsSDK
+from scw_sdk.core import FunctionSDK
 
-functions_api = ScwFunctionsSDK()
-containers = functions_api.list_containers()
+functions = FunctionSDK()
+containers = functions.list_containers()
 ```
 
 ## Object Storage :
@@ -84,9 +82,9 @@ containers = functions_api.list_containers()
 - create a bucket
 
 ```python
-from object_storage import ObjectStorage
+from scw_sdk.core import ObjectStorageSDK
 
-object_storage = ObjectStorage()
+object_storage = sdk.ObjectStorage()
 buckets = object_storage.list_buckets()
 bucket = object_storage.create_bucket("shoptero")
 ```
