@@ -6,7 +6,7 @@ from .scw_sdk import ScwSDK
 from pydantic import validate_arguments
 
 
-class ScwDataBaseSDK(ScwSDK):
+class ScwRdbSDK(ScwSDK):
 
     def __init__(self, region: str = "fr-par"):
         super().__init__(name="rdb", version="v1", region=region)
