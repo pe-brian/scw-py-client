@@ -4,7 +4,7 @@ from .models.region import Region
 from .models.rdb.database import Database
 from .models.rdb.instance import Instance
 from .models.pagination import Pagination
-from .scw_sdk import ScwSDK
+from .scw_api import ScwAPI
 
 from pydantic import validate_arguments
 
@@ -12,7 +12,7 @@ import requests
 import json
 
 
-class ScwRdbSDK(ScwSDK):
+class Rdb(ScwAPI):
 
     def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="rdb", version="v1", region=region)
@@ -53,12 +53,12 @@ class ScwRdbSDK(ScwSDK):
     @validate_arguments
     def create_database(self, instance: Instance, database: Database):
         return Database(**json.loads(self.request(
-            f"/instances/{instance.id}/databases", ScwSDK.Method.POST, data=database.dict())))
+            f"/instances/{instance.id}/databases", ScwAPI.Method.POST, data=database.dict())))
 
     @validate_arguments
     def delete_database(self, instance: Instance, database: Database):
         self.request(
-            f"/instances/{instance.id}/databases/{database.name}", ScwSDK.Method.DELETE, data=database.dict())
+            f"/instances/{instance.id}/databases/{database.name}", ScwAPI.Method.DELETE, data=database.dict())
 
     # USERS
 
@@ -82,7 +82,7 @@ class ScwRdbSDK(ScwSDK):
     ):
         try:
             return User(**json.loads(self.request(
-                f"/instances/{instance.id}/users", ScwSDK.Method.POST, data=user.dict() | {"password": password})))
+                f"/instances/{instance.id}/users", ScwAPI.Method.POST, data=user.dict() | {"password": password})))
         except requests.exceptions.HTTPError:
             raise ValueError("Unable to create user")
 
@@ -93,13 +93,13 @@ class ScwRdbSDK(ScwSDK):
         user: User,
         password: User.Password = None
     ): return User(**json.loads(self.request(
-            f"/instances/{instance.id}/users/{user.name}", ScwSDK.Method.PATCH, data=user.dict() | {
+            f"/instances/{instance.id}/users/{user.name}", ScwAPI.Method.PATCH, data=user.dict() | {
                 "password": password})))
 
     @validate_arguments
     def delete_user(self, instance: Instance, user: Database):
         self.request(
-            f"/instances/{instance.id}/users/{user.name}", ScwSDK.Method.DELETE, data=user.dict())
+            f"/instances/{instance.id}/users/{user.name}", ScwAPI.Method.DELETE, data=user.dict())
 
     # PRIVILEGES
 
@@ -119,4 +119,4 @@ class ScwRdbSDK(ScwSDK):
     @validate_arguments
     def set_user_privileges(self, instance: Instance, privileges: Privileges):
         return Privileges(**json.loads(self.request(
-            f"/instances/{instance.id}/privileges", method=ScwSDK.Method.PUT, data=privileges.dict())))
+            f"/instances/{instance.id}/privileges", method=ScwAPI.Method.PUT, data=privileges.dict())))
