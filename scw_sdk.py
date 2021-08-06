@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from models.region import Region
+from .models.region import Region
 import requests
 import json
 import os

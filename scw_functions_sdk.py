@@ -6,7 +6,7 @@ from models.functions.namespace import Namespace
 from models.functions.function import Function
 from models.functions.cron import Cron
 from models.functions.log import Log
-from .scw_sdk import ScwSDK
+from scw_sdk import ScwSDK
 from pydantic import validate_arguments
 
 
