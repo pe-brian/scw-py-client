@@ -8,7 +8,7 @@ import os
 from enum import Enum
 
 
-class BaseAPI:
+class ClientAPI:
 
     class Method(Enum):
         GET = "GET"
@@ -34,22 +34,22 @@ class BaseAPI:
         }
 
     def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}):
-        print(json.dumps(BaseAPI._clean_dict(data)))
-        if method == BaseAPI.Method.GET:
+        print(json.dumps(ClientAPI._clean_dict(data)))
+        if method == ClientAPI.Method.GET:
             res = requests.get(self.API_url + url, headers=self.headers, params=data)
-        elif method == BaseAPI.Method.POST:
-            res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
-        elif method == BaseAPI.Method.PATCH:
-            res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
-        elif method == BaseAPI.Method.DELETE:
+        elif method == ClientAPI.Method.POST:
+            res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(ClientAPI._clean_dict(data)))
+        elif method == ClientAPI.Method.PATCH:
+            res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(ClientAPI._clean_dict(data)))
+        elif method == ClientAPI.Method.DELETE:
             res = requests.delete(self.API_url + url, headers=self.headers)
-        elif method == BaseAPI.Method.PUT:
-            res = requests.put(self.API_url + url, headers=self.headers, data=json.dumps(BaseAPI._clean_dict(data)))
+        elif method == ClientAPI.Method.PUT:
+            res = requests.put(self.API_url + url, headers=self.headers, data=json.dumps(ClientAPI._clean_dict(data)))
         else:
             raise Exception(f"Unhandled method: {method}")
         if not res.ok:
-            raise BaseAPI.Error(res.json()["message"])
-        if method != BaseAPI.Method.DELETE:
+            raise ClientAPI.Error(res.json()["message"])
+        if method != ClientAPI.Method.DELETE:
             return json.dumps(res.json(), indent=4, sort_keys=True)
 
     @classmethod

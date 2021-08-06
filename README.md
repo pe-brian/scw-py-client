@@ -1,4 +1,4 @@
-# Scaleway-SDK
+# Scaleway-Client
 
 ## Rdb :
 
@@ -11,22 +11,22 @@
 - delete_database
 
 ```python
-from scw_sdk.models.rdb import Privileges, User, Database
-from scw_sdk.core import RdbSDK
+from scw_py_client.models.rdb import Privileges, User, Database
+from scw_py_client.core import RdbClient
 
-rdb = sdk.Rdb()
+rdbClient = Client.Rdb()
 
-instances = rdb.list_instances()
+instances = rdbClient.list_instances()
 instance = instances[0]
 
-test_database = rdb.create_database(instance=instance, database=Database(name="test_database"))
-test_user = rdb.create_user(
-    instance=instance, user=User(name="test_user"), password=User.Password("password"))
-rdb.set_user_privileges(instance=instance, privileges=Privileges(
+test_database = rdbClient.create_database(instance=instance, database=Database(name="test_database"))
+test_user = rdbClient.create_user(
+    instance=instance, user=User(name="test_user"), password=User.Password("password1"))
+rdbClient.set_user_privileges(instance=instance, privileges=Privileges(
     database_name=test_database.name, user_name=test_user.name, permission=Privileges.Permission.ReadWrite))
-test_user = rdb.update_user(instance=instance, user=test_user, password=User.Password("password"))
-rdb.delete_user(instance=instances[0], user=test_user)
-rdb.delete_database(instance=instance, database=test_database)
+test_user = rdbClient.update_user(instance=instance, user=test_user, password=User.Password("password2"))
+rdbClient.delete_user(instance=instances[0], user=test_user)
+rdbClient.delete_database(instance=instance, database=test_database)
 ```
 
 ## Registry :
@@ -37,10 +37,10 @@ rdb.delete_database(instance=instance, database=test_database)
 - delete_image
 
 ```python
-from scw_sdk.core import RegistrySDK
+from scw_py_client.core import RegistryClient
 
-registry = RegistrySDK()
-images = registry.list_images()
+registryClient = RegistryClient()
+images = registryClient.list_images()
 ```
 
 ## Functions :
@@ -70,9 +70,9 @@ images = registry.list_images()
 - list_logs
 
 ```python
-from scw_sdk.core import FunctionSDK
+from scw_py_client.core import FunctionsClient
 
-functions = FunctionSDK()
+functions_client = FunctionsClient()
 containers = functions.list_containers()
 ```
 
@@ -82,9 +82,9 @@ containers = functions.list_containers()
 - create a bucket
 
 ```python
-from scw_sdk.core import ObjectStorageSDK
+from scw_py_client.core import ObjectStorageClient
 
-object_storage = sdk.ObjectStorage()
-buckets = object_storage.list_buckets()
-bucket = object_storage.create_bucket("my_bucket_name")
+object_storage_client = ObjectStorageClient.ObjectStorage()
+buckets = object_storage_client.list_buckets()
+bucket = object_storage_client.create_bucket("my_bucket_name")
 ```

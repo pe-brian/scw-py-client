@@ -3,7 +3,7 @@ from .models.pagination import Pagination
 from .models.functions import Container, Namespace, Function, Cron, Log
 from .models.registry import Image
 from .models.rdb import Privileges, User, Database, Instance
-from .base_api import BaseAPI
+from .client_api import ClientAPI
 
 from pydantic import validate_arguments
 import boto3
@@ -13,7 +13,7 @@ import json
 import os
 
 
-class FunctionsSDK(BaseAPI):
+class FunctionsClient(ClientAPI):
 
     def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="functions", version="v1alpha2", region=region)
@@ -40,20 +40,20 @@ class FunctionsSDK(BaseAPI):
 
     @validate_arguments
     def create_container(self, container: Container):
-        return Container(**json.loads(self.request("/containers", BaseAPI.Method.POST, data=container.dict())))
+        return Container(**json.loads(self.request("/containers", ClientAPI.Method.POST, data=container.dict())))
 
     @validate_arguments
     def deploy_container(self, id: str):
-        return Container(**json.loads(self.request(f"/containers/{id}/deploy", BaseAPI.Method.POST)))
+        return Container(**json.loads(self.request(f"/containers/{id}/deploy", ClientAPI.Method.POST)))
 
     @validate_arguments
     def update_container(self, id, container: Container):
-        return Container(**json.loads(self.request(f"/containers/{id}", BaseAPI.Method.PATCH, data=container.dict())))
+        return Container(**json.loads(self.request(f"/containers/{id}", ClientAPI.Method.PATCH, data=container.dict())))
 
     @validate_arguments
     def delete_container(self, container: Container):
         return Container(**json.loads(self.request(
-            f"/containers/{container.id}", BaseAPI.Method.DELETE, data=container.dict())))
+            f"/containers/{container.id}", ClientAPI.Method.DELETE, data=container.dict())))
 
     # NAMESPACES
 
@@ -74,17 +74,17 @@ class FunctionsSDK(BaseAPI):
 
     @validate_arguments
     def create_namespace(self, namespace: Namespace):
-        return Namespace(**json.loads(self.request("/namespaces", BaseAPI.Method.POST, data=namespace.dict())))
+        return Namespace(**json.loads(self.request("/namespaces", ClientAPI.Method.POST, data=namespace.dict())))
 
     @validate_arguments
     def update_namespace(self, namespace: Namespace):
         return Namespace(**json.loads(
-            self.request(f"/namespaces/{namespace.id}", BaseAPI.Method.PATCH, data=namespace.dict())))
+            self.request(f"/namespaces/{namespace.id}", ClientAPI.Method.PATCH, data=namespace.dict())))
 
     @validate_arguments
     def delete_namespace(self, namespace: Namespace):
         return Namespace(**json.loads(
-            self.request(f"/namespaces/{namespace.id}", BaseAPI.Method.DELETE, data=namespace.dict())))
+            self.request(f"/namespaces/{namespace.id}", ClientAPI.Method.DELETE, data=namespace.dict())))
 
     # FUNCTIONS
 
@@ -107,22 +107,22 @@ class FunctionsSDK(BaseAPI):
 
     @validate_arguments
     def create_function(self, function: Function):
-        return Function(**json.loads(self.request("/functions", BaseAPI.Method.POST, data=function.dict())))
+        return Function(**json.loads(self.request("/functions", ClientAPI.Method.POST, data=function.dict())))
 
     @validate_arguments
     def deploy_function(self, function: Function):
         return Function(**json.loads(self.request(
-            f"/functions/{function.id}/deploy", BaseAPI.Method.POST, data=function.dict())))
+            f"/functions/{function.id}/deploy", ClientAPI.Method.POST, data=function.dict())))
 
     @validate_arguments
     def update_function(self, function: Function):
         return Function(**json.loads(
-            self.request(f"/functions/{function.id}", BaseAPI.Method.PATCH, data=function.dict())))
+            self.request(f"/functions/{function.id}", ClientAPI.Method.PATCH, data=function.dict())))
 
     @validate_arguments
     def delete_function(self, function: Function):
         return Function(**json.loads(
-            self.request(f"/functions/{function.id}", BaseAPI.Method.DELETE, data=function.dict())))
+            self.request(f"/functions/{function.id}", ClientAPI.Method.DELETE, data=function.dict())))
 
     # CRONS
 
@@ -142,15 +142,15 @@ class FunctionsSDK(BaseAPI):
 
     @validate_arguments
     def create_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request("/crons", BaseAPI.Method.POST, data=cron.dict())))
+        return Cron(**json.loads(self.request("/crons", ClientAPI.Method.POST, data=cron.dict())))
 
     @validate_arguments
     def update_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request(f"/crons/{cron.id}", BaseAPI.Method.PATCH, data=cron.dict())))
+        return Cron(**json.loads(self.request(f"/crons/{cron.id}", ClientAPI.Method.PATCH, data=cron.dict())))
 
     @validate_arguments
     def delete_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request(f"/crons/{cron.id}", BaseAPI.Method.DELETE, data=cron.dict())))
+        return Cron(**json.loads(self.request(f"/crons/{cron.id}", ClientAPI.Method.DELETE, data=cron.dict())))
 
     # LOGS
 
@@ -165,7 +165,7 @@ class FunctionsSDK(BaseAPI):
                 "application_id": application_id} | pagination.dict() | ordering.dict()))["logs"]]
 
 
-class RdbSDK(BaseAPI):
+class RdbClient(ClientAPI):
 
     def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="rdb", version="v1", region=region)
@@ -206,12 +206,12 @@ class RdbSDK(BaseAPI):
     @validate_arguments
     def create_database(self, instance: Instance, database: Database):
         return Database(**json.loads(self.request(
-            f"/instances/{instance.id}/databases", BaseAPI.Method.POST, data=database.dict())))
+            f"/instances/{instance.id}/databases", ClientAPI.Method.POST, data=database.dict())))
 
     @validate_arguments
     def delete_database(self, instance: Instance, database: Database):
         self.request(
-            f"/instances/{instance.id}/databases/{database.name}", BaseAPI.Method.DELETE, data=database.dict())
+            f"/instances/{instance.id}/databases/{database.name}", ClientAPI.Method.DELETE, data=database.dict())
 
     # USERS
 
@@ -235,7 +235,7 @@ class RdbSDK(BaseAPI):
     ):
         try:
             return User(**json.loads(self.request(
-                f"/instances/{instance.id}/users", BaseAPI.Method.POST, data=user.dict() | {"password": password})))
+                f"/instances/{instance.id}/users", ClientAPI.Method.POST, data=user.dict() | {"password": password})))
         except requests.exceptions.HTTPError:
             raise ValueError("Unable to create user")
 
@@ -246,13 +246,13 @@ class RdbSDK(BaseAPI):
         user: User,
         password: User.Password = None
     ): return User(**json.loads(self.request(
-            f"/instances/{instance.id}/users/{user.name}", BaseAPI.Method.PATCH, data=user.dict() | {
+            f"/instances/{instance.id}/users/{user.name}", ClientAPI.Method.PATCH, data=user.dict() | {
                 "password": password})))
 
     @validate_arguments
     def delete_user(self, instance: Instance, user: Database):
         self.request(
-            f"/instances/{instance.id}/users/{user.name}", BaseAPI.Method.DELETE, data=user.dict())
+            f"/instances/{instance.id}/users/{user.name}", ClientAPI.Method.DELETE, data=user.dict())
 
     # PRIVILEGES
 
@@ -272,10 +272,10 @@ class RdbSDK(BaseAPI):
     @validate_arguments
     def set_user_privileges(self, instance: Instance, privileges: Privileges):
         return Privileges(**json.loads(self.request(
-            f"/instances/{instance.id}/privileges", method=BaseAPI.Method.PUT, data=privileges.dict())))
+            f"/instances/{instance.id}/privileges", method=ClientAPI.Method.PUT, data=privileges.dict())))
 
 
-class RegistrySDK(BaseAPI):
+class RegistryClient(ClientAPI):
 
     def __init__(self, region: Region = Region.FrPar):
         super().__init__(name="registry", version="v1", region=region)
@@ -303,14 +303,14 @@ class RegistrySDK(BaseAPI):
 
     @validate_arguments
     def update_image(self, image: Image):
-        return Image(**json.loads(self.request(f"/image/{image.id}", BaseAPI.Method.PATCH, data=image.dict())))
+        return Image(**json.loads(self.request(f"/image/{image.id}", ClientAPI.Method.PATCH, data=image.dict())))
 
     @validate_arguments
     def delete_image(self, image: Image):
-        return Image(**json.loads(self.request(f"/images/{image.id}", BaseAPI.Method.DELETE, data=image.dict())))
+        return Image(**json.loads(self.request(f"/images/{image.id}", ClientAPI.Method.DELETE, data=image.dict())))
 
 
-class ObjectStorageSDK:
+class ObjectStorageClient:
 
     def __init__(self, region: Region = Region.FrPar):
         session = boto3.session.Session()
