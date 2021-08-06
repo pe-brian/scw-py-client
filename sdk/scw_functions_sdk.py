@@ -37,20 +37,20 @@ class ScwFunctionsSDK(ScwSDK):
 
     @validate_arguments
     def create_container(self, container: Container):
-        return Container(**json.loads(self.request("/containers", method="POST", data=container.dict())))
+        return Container(**json.loads(self.request("/containers", ScwSDK.Method.POST, data=container.dict())))
 
     @validate_arguments
     def deploy_container(self, id: str):
-        return Container(**json.loads(self.request(f"/containers/{id}/deploy", method="POST")))
+        return Container(**json.loads(self.request(f"/containers/{id}/deploy", ScwSDK.Method.POST)))
 
     @validate_arguments
     def update_container(self, id, container: Container):
-        return Container(**json.loads(self.request(f"/containers/{id}", method="PATCH", data=container.dict())))
+        return Container(**json.loads(self.request(f"/containers/{id}", ScwSDK.Method.PATCH, data=container.dict())))
 
     @validate_arguments
     def delete_container(self, container: Container):
         return Container(**json.loads(self.request(
-            f"/containers/{container.id}", method="DELETE", data=container.dict())))
+            f"/containers/{container.id}", ScwSDK.Method.DELETE, data=container.dict())))
 
     # NAMESPACES
 
@@ -71,17 +71,17 @@ class ScwFunctionsSDK(ScwSDK):
 
     @validate_arguments
     def create_namespace(self, namespace: Namespace):
-        return Namespace(**json.loads(self.request("/namespaces", method="POST", data=namespace.dict())))
+        return Namespace(**json.loads(self.request("/namespaces", ScwSDK.Method.POST, data=namespace.dict())))
 
     @validate_arguments
     def update_namespace(self, namespace: Namespace):
         return Namespace(**json.loads(
-            self.request(f"/namespaces/{namespace.id}", method="PATCH", data=namespace.dict())))
+            self.request(f"/namespaces/{namespace.id}", ScwSDK.Method.PATCH, data=namespace.dict())))
 
     @validate_arguments
     def delete_namespace(self, namespace: Namespace):
         return Namespace(**json.loads(
-            self.request(f"/namespaces/{namespace.id}", method="DELETE", data=namespace.dict())))
+            self.request(f"/namespaces/{namespace.id}", ScwSDK.Method.DELETE, data=namespace.dict())))
 
     # FUNCTIONS
 
@@ -104,20 +104,22 @@ class ScwFunctionsSDK(ScwSDK):
 
     @validate_arguments
     def create_function(self, function: Function):
-        return Function(**json.loads(self.request("/functions", method="POST", data=function.dict())))
+        return Function(**json.loads(self.request("/functions", ScwSDK.Method.POST, data=function.dict())))
 
     @validate_arguments
     def deploy_function(self, function: Function):
         return Function(**json.loads(self.request(
-            f"/functions/{function.id}/deploy", method="POST", data=function.dict())))
+            f"/functions/{function.id}/deploy", ScwSDK.Method.POST, data=function.dict())))
 
     @validate_arguments
     def update_function(self, function: Function):
-        return Function(**json.loads(self.request(f"/functions/{function.id}", method="PATCH", data=function.dict())))
+        return Function(**json.loads(
+            self.request(f"/functions/{function.id}", ScwSDK.Method.PATCH, data=function.dict())))
 
     @validate_arguments
     def delete_function(self, function: Function):
-        return Function(**json.loads(self.request(f"/functions/{function.id}", method="DELETE", data=function.dict())))
+        return Function(**json.loads(
+            self.request(f"/functions/{function.id}", ScwSDK.Method.DELETE, data=function.dict())))
 
     # CRONS
 
@@ -137,15 +139,15 @@ class ScwFunctionsSDK(ScwSDK):
 
     @validate_arguments
     def create_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request("/crons", method="POST", data=cron.dict())))
+        return Cron(**json.loads(self.request("/crons", ScwSDK.Method.POST, data=cron.dict())))
 
     @validate_arguments
     def update_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request(f"/crons/{cron.id}", method="PATCH", data=cron.dict())))
+        return Cron(**json.loads(self.request(f"/crons/{cron.id}", ScwSDK.Method.PATCH, data=cron.dict())))
 
     @validate_arguments
     def delete_cron(self, cron: Cron):
-        return Cron(**json.loads(self.request(f"/crons/{cron.id}", method="DELETE", data=cron.dict())))
+        return Cron(**json.loads(self.request(f"/crons/{cron.id}", ScwSDK.Method.DELETE, data=cron.dict())))
 
     # LOGS
 

@@ -34,8 +34,8 @@ class ScwRegistrySDK(ScwSDK):
 
     @validate_arguments
     def update_image(self, image: Image):
-        return Image(**json.loads(self.request(f"/image/{image.id}", method="PATCH", data=image.dict())))
+        return Image(**json.loads(self.request(f"/image/{image.id}", ScwSDK.Method.PATCH, data=image.dict())))
 
     @validate_arguments
     def delete_image(self, image: Image):
-        return Image(**json.loads(self.request(f"/images/{image.id}", method="DELETE", data=image.dict())))
+        return Image(**json.loads(self.request(f"/images/{image.id}", ScwSDK.Method.DELETE, data=image.dict())))

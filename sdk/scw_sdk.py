@@ -1,10 +1,24 @@
+from typing import Any, Dict
 from models.region import Region
 import requests
 import json
 import os
+from enum import Enum
 
 
 class ScwSDK:
+
+    class Method(Enum):
+        GET = "GET"
+        POST = "POST"
+        PATCH = "PATCH"
+        DELETE = "DELETE"
+        PUT = "PUT"
+
+    class Error(Exception):
+
+        def __init__(self, *args: object):
+            super().__init__(*args)
 
     def __init__(self, name: str, version: str, region: Region = Region.FrPar):
         token = os.getenv("SCW_API_SECRET_KEY")
@@ -17,21 +31,23 @@ class ScwSDK:
             "Content-Type": "application/json"
         }
 
-    def request(self, url, method="GET", data={}):
-        if method == "GET":
+    def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}):
+        print(json.dumps(ScwSDK._clean_dict(data)))
+        if method == ScwSDK.Method.GET:
             res = requests.get(self.API_url + url, headers=self.headers, params=data)
-        elif method == "POST":
+        elif method == ScwSDK.Method.POST:
             res = requests.post(self.API_url + url, headers=self.headers, data=json.dumps(ScwSDK._clean_dict(data)))
-        elif method == "PATCH":
+        elif method == ScwSDK.Method.PATCH:
             res = requests.patch(self.API_url + url, headers=self.headers, data=json.dumps(ScwSDK._clean_dict(data)))
-        elif method == "DELETE":
+        elif method == ScwSDK.Method.DELETE:
             res = requests.delete(self.API_url + url, headers=self.headers)
+        elif method == ScwSDK.Method.PUT:
+            res = requests.put(self.API_url + url, headers=self.headers, data=json.dumps(ScwSDK._clean_dict(data)))
         else:
             raise Exception(f"Unhandled method: {method}")
         if not res.ok:
-            print(res.text)
-        res.raise_for_status()
-        if method != "DELETE":
+            raise ScwSDK.Error(res.json()["message"])
+        if method != ScwSDK.Method.DELETE:
             return json.dumps(res.json(), indent=4, sort_keys=True)
 
     @classmethod
