@@ -1,4 +1,4 @@
-# Scaleway-Py-Client
+# Scaleway Python Client
 
 ## Rdb :
 
@@ -78,13 +78,15 @@ containers = functions.list_containers()
 
 ## Object Storage :
 
-- list buckets
-- create a bucket
+- list_buckets
+- create_bucket
+- enable_bucket_website
+- upload_file_to_bucket
 
 ```python
 from scw_py_client.core import ObjectStorageClient
 
 object_storage_client = ObjectStorageClient.ObjectStorage()
 buckets = object_storage_client.list_buckets()
-bucket = object_storage_client.create_bucket("my_bucket_name")
+object_storage_client.create_bucket("my_bucket_name")
 ```
