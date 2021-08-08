@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Dict, Any
 from enum import Enum
-from models.region import Region
+from .region import Region
 
 
 class Namespace(BaseModel):

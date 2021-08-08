@@ -329,4 +329,16 @@ class ObjectStorageClient:
         return response['Buckets']
 
     def create_bucket(self, name: str):
-        return self.s3.create_bucket(Bucket=name)
+        self.s3.create_bucket(Bucket=name)
+
+    def enable_bucket_website(self, name: str):
+        self.s3.put_bucket_website(
+            Bucket=name,
+            WebsiteConfiguration={
+                'ErrorDocument': {'Key': 'error.html'},
+                'IndexDocument': {'Suffix': 'index.html'},
+            }
+        )
+
+    def upload_file_to_bucket(self, file_path: str, bucket_name: str, file_name: str):
+        self.s3.upload_file(file_path, bucket_name, file_name)

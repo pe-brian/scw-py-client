@@ -23,9 +23,9 @@ class ClientAPI:
             super().__init__(*args)
 
     def __init__(self, name: str, version: str, region: Region = Region.FrPar):
-        token = os.getenv("SCW_API_SECRET_KEY")
+        token = os.getenv("SCW_API_KEY")
         if not token:
-            raise Exception("SCW_API_SECRET_KEY must be defined as environment variable")
+            raise Exception("SCW_API_KEY must be defined as environment variable")
         self.API_url = f"https://api.scaleway.com/{name}/{version}/regions/{region.value}"
         self.headers = {
             "accept": "application/json",
