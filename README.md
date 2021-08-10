@@ -1,5 +1,9 @@
 # Scaleway Python Client
 
+##  prerequisites :
+
+Set the environment variables SCW_API_KEY_ID & SCW_API_KEY.
+
 ## Rdb :
 
 - list_instances
