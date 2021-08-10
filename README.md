@@ -94,3 +94,14 @@ object_storage_client = ObjectStorageClient.ObjectStorage()
 buckets = object_storage_client.list_buckets()
 object_storage_client.create_bucket("my_bucket_name")
 ```
+
+## K8s :
+
+- list_clusters
+
+```python
+from src.scw_py_client.core import K8sClient
+
+k8s_client = K8sClient()
+clusters = k8s_client.list_clusters()
+```

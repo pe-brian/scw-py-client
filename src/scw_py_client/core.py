@@ -1,3 +1,4 @@
+from .models.k8s import Cluster
 from .models.region import Region
 from .models.pagination import Pagination
 from .models.functions import Container, Namespace, Function, Cron, Log
@@ -308,6 +309,35 @@ class RegistryClient(ClientAPI):
     @validate_arguments
     def delete_image(self, image: Image):
         return Image(**json.loads(self.request(f"/images/{image.id}", ClientAPI.Method.DELETE, data=image.dict())))
+
+
+class K8sClient(ClientAPI):
+
+    def __init__(self, region: Region = Region.FrPar):
+        super().__init__(name="k8s", version="v1", region=region)
+
+    # CLUSTERS
+
+    @validate_arguments
+    def list_clusters(
+        self,
+        name: str = None,
+        status: Cluster.Status = Cluster.Status.Unknow,
+        type: str = None,
+        pagination: Pagination = Pagination(),
+        ordering: Cluster.Ordering = Cluster.Ordering(),
+        application_id: str = None,
+        organization_id: str = None,
+        project_id: str = None
+    ): return [Cluster(**data) for data in json.loads(
+            self.request("/clusters", data={
+                "status": status.value,
+                "type": type,
+                "application_id": application_id,
+                "organization_id": organization_id,
+                "project_id": project_id,
+                "name": name
+            } | pagination.dict() | ordering.dict()))["clusters"]]
 
 
 class ObjectStorageClient:
