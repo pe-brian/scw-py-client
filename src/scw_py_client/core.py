@@ -343,9 +343,9 @@ class K8sClient(ClientAPI):
     def download_kubeconfig(
         self,
         cluster_id: str
-    ): return json.loads(self.request(f"/clusters/{cluster_id}/kubeconfig", data={
+    ): return self.request(f"/clusters/{cluster_id}/kubeconfig?dl=1", data={
             "cluster_id": cluster_id
-        }))["content"]
+        }, to_json=False)
 
     # NODES
 

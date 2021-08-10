@@ -33,7 +33,7 @@ class ClientAPI:
             "Content-Type": "application/json"
         }
 
-    def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}):
+    def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}, to_json=True):
         print(json.dumps(ClientAPI._clean_dict(data)))
         if method == ClientAPI.Method.GET:
             res = requests.get(self.API_url + url, headers=self.headers, params=data)
@@ -49,8 +49,10 @@ class ClientAPI:
             raise Exception(f"Unhandled method: {method}")
         if not res.ok:
             raise ClientAPI.Error(res.json()["message"])
-        if method != ClientAPI.Method.DELETE:
+        if method != ClientAPI.Method.DELETE and to_json:
             return json.dumps(res.json(), indent=4, sort_keys=True)
+        else:
+            return res.content
 
     @classmethod
     def _clean_dict(cls, d):
