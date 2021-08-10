@@ -8,7 +8,7 @@ class Image(BaseModel):
 
     class Privacy(Enum):
 
-        Unknown = "unknow"
+        Unknown = "unknown"
         Public = "public"
         Private = "private"
 

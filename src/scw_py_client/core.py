@@ -1,4 +1,4 @@
-from .models.k8s import Cluster
+from .models.k8s import Cluster, Node
 from .models.region import Region
 from .models.pagination import Pagination
 from .models.functions import Container, Namespace, Function, Cron, Log
@@ -322,7 +322,7 @@ class K8sClient(ClientAPI):
     def list_clusters(
         self,
         name: str = None,
-        status: Cluster.Status = Cluster.Status.Unknow,
+        status: Cluster.Status = Cluster.Status.Unknown,
         type: str = None,
         pagination: Pagination = Pagination(),
         ordering: Cluster.Ordering = Cluster.Ordering(),
@@ -338,6 +338,32 @@ class K8sClient(ClientAPI):
                 "project_id": project_id,
                 "name": name
             } | pagination.dict() | ordering.dict()))["clusters"]]
+
+    @validate_arguments
+    def download_kubeconfig(
+        self,
+        cluster_id: str
+    ): return Node(**json.loads(self.request(f"/clusters/{cluster_id}/kubeconfig", data={
+            "cluster_id": cluster_id
+        }))["content"])
+
+    # NODES
+
+    @validate_arguments
+    def list_nodes(
+        self,
+        cluster_id: str,
+        pool_id: str = None,
+        name: str = None,
+        status: Node.Status = Node.Status.Unknown,
+        pagination: Pagination = Pagination(),
+        ordering: Node.Ordering = Node.Ordering(),
+    ): return [Node(**data) for data in json.loads(
+            self.request(f"/clusters/{cluster_id}/nodes", data={
+                "status": status.value,
+                "name": name,
+                "pool_id": pool_id
+            } | pagination.dict() | ordering.dict()))["nodes"]]
 
 
 class ObjectStorageClient:

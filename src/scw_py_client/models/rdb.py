@@ -4,6 +4,8 @@ from typing import List
 from datetime import datetime
 import re
 
+from pydantic.types import PositiveInt
+
 
 class Privileges(BaseModel):
 
@@ -79,6 +81,11 @@ class User(BaseModel):
 
 class Instance(BaseModel):
 
+    class Endpoint(BaseModel):
+        ip: str
+        port: PositiveInt
+        name: str = None
+
     class Ordering(BaseModel):
 
         class OrderBy(Enum):
@@ -105,6 +112,7 @@ class Instance(BaseModel):
     status_message: str = None
     created_at: datetime
     tags: List[str]
+    endpoint: Endpoint = None
 
 
 class Database(BaseModel):
