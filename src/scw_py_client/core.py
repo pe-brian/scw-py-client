@@ -187,6 +187,12 @@ class RdbClient(ClientAPI):
                 "project_id": project_id,
                 "name": name} | pagination.dict() | ordering.dict()))["instances"]]
 
+    @validate_arguments
+    def get_instance(
+        self,
+        instance_id
+    ): return Instance(**json.loads(self.request(f"/instances/{instance_id}")))
+
     # DATABASES
 
     @validate_arguments
@@ -364,6 +370,12 @@ class K8sClient(ClientAPI):
                 "name": name,
                 "pool_id": pool_id
             } | pagination.dict() | ordering.dict()))["nodes"]]
+
+    @validate_arguments
+    def get_node(
+        self,
+        node_id: str
+    ): return Node(**json.loads(self.request(f"/nodes/{node_id}")))
 
 
 class ObjectStorageClient:

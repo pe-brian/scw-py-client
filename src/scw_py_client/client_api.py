@@ -34,7 +34,6 @@ class ClientAPI:
         }
 
     def request(self, url: str, method: Method = Method.GET, data: Dict[str, Any] = {}, to_json=True):
-        print(json.dumps(ClientAPI._clean_dict(data)))
         if method == ClientAPI.Method.GET:
             res = requests.get(self.API_url + url, headers=self.headers, params=data)
         elif method == ClientAPI.Method.POST:
