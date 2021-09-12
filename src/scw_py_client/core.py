@@ -399,12 +399,12 @@ class ObjectStorageClient:
     def create_bucket(self, name: str):
         self.s3.create_bucket(Bucket=name)
 
-    def enable_bucket_website(self, name: str):
+    def enable_bucket_website(self, name: str, error_path: str = 'error.html', index_path: str = 'index.html'):
         self.s3.put_bucket_website(
             Bucket=name,
             WebsiteConfiguration={
-                'ErrorDocument': {'Key': 'error.html'},
-                'IndexDocument': {'Suffix': 'index.html'},
+                'ErrorDocument': {'Key': error_path},
+                'IndexDocument': {'Suffix': index_path},
             }
         )
 
