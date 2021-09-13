@@ -383,24 +383,32 @@ class ObjectStorageClient:
     def __init__(self, region: Region = Region.FrPar):
         session = boto3.session.Session()
         endpoint_url = f'http://s3.{region.value}.scw.cloud'
-        self.s3 = session.client(
-            service_name='s3',
-            region_name=region.value,
-            use_ssl=True,
-            endpoint_url=endpoint_url,
-            aws_access_key_id=os.getenv("SCW_API_KEY_ID"),
-            aws_secret_access_key=os.getenv("SCW_API_KEY")
-        )
+        data = {
+            "service_name": 's3',
+            "region_name": region.value,
+            "use_ssl": True,
+            "endpoint_url": endpoint_url,
+            "aws_access_key_id": os.getenv("SCW_API_KEY_ID"),
+            "aws_secret_access_key": os.getenv("SCW_API_KEY")}
+        self.s3 = boto3.resource(**data)
+        self.session = session.client(**data)
 
     def list_buckets(self):
-        response = self.s3.list_buckets()
+        response = self.session.list_buckets()
         return response['Buckets']
 
     def create_bucket(self, name: str):
-        self.s3.create_bucket(Bucket=name)
+        self.session.create_bucket(Bucket=name)
+
+    def delete_bucket(self, name: str):
+        for bucket_data in self.list_buckets():
+            if bucket_data['Name'] == name:
+                bucket = self.s3.Bucket(name)
+                bucket.objects.all().delete()
+                bucket.delete()
 
     def enable_bucket_website(self, name: str, error_path: str = 'error.html', index_path: str = 'index.html'):
-        self.s3.put_bucket_website(
+        self.session.put_bucket_website(
             Bucket=name,
             WebsiteConfiguration={
                 'ErrorDocument': {'Key': error_path},
@@ -409,4 +417,4 @@ class ObjectStorageClient:
         )
 
     def upload_file_to_bucket(self, file_path: str, bucket_name: str, file_name: str):
-        self.s3.upload_file(file_path, bucket_name, file_name)
+        self.session.upload_file(file_path, bucket_name, file_name)
