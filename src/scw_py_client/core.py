@@ -211,14 +211,14 @@ class RdbClient(ClientAPI):
                 "name": name} | pagination.dict() | ordering.dict()))["databases"]]
 
     @validate_arguments
-    def create_database(self, instance: Instance, database: Database):
+    def create_database(self, instance_id: str, database: Database):
         return Database(**json.loads(self.request(
-            f"/instances/{instance.id}/databases", ClientAPI.Method.POST, data=database.dict())))
+            f"/instances/{instance_id}/databases", ClientAPI.Method.POST, data=database.dict())))
 
     @validate_arguments
-    def delete_database(self, instance: Instance, database: Database):
+    def delete_database(self, instance_id: str, database_name: str):
         self.request(
-            f"/instances/{instance.id}/databases/{database.name}", ClientAPI.Method.DELETE, data=database.dict())
+            f"/instances/{instance_id}/databases/{database_name}", ClientAPI.Method.DELETE)
 
     # USERS
 
