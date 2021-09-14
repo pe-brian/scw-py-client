@@ -198,14 +198,14 @@ class RdbClient(ClientAPI):
     @validate_arguments
     def list_databases(
         self,
-        instance: Instance,
+        instance_id: str,
         name: str = None,
         managed: bool = None,
         owner: str = None,
         ordering: Database.Ordering = Database.Ordering(),
         pagination: Pagination = Pagination()
     ): return [Database(**data) for data in json.loads(
-            self.request(f"/instances/{instance.id}/databases", data={
+            self.request(f"/instances/{instance_id}/databases", data={
                 "owner": owner,
                 "managed": managed,
                 "name": name} | pagination.dict() | ordering.dict()))["databases"]]
@@ -225,61 +225,61 @@ class RdbClient(ClientAPI):
     @validate_arguments
     def list_users(
         self,
-        instance: Instance,
+        instance_id: str,
         name: str = None,
         ordering: User.Ordering = User.Ordering(),
         pagination: Pagination = Pagination()
     ): return [User(**data) for data in json.loads(
-            self.request(f"/instances/{instance.id}/users", data={
+            self.request(f"/instances/{instance_id}/users", data={
                 "name": name} | pagination.dict() | ordering.dict()))["users"]]
 
     @validate_arguments
     def create_user(
         self,
-        instance: Instance,
+        instance_id: str,
         user: User,
         password: User.Password
     ):
         try:
             return User(**json.loads(self.request(
-                f"/instances/{instance.id}/users", ClientAPI.Method.POST, data=user.dict() | {"password": password})))
+                f"/instances/{instance_id}/users", ClientAPI.Method.POST, data=user.dict() | {"password": password})))
         except requests.exceptions.HTTPError:
             raise ValueError("Unable to create user")
 
     @validate_arguments
     def update_user(
         self,
-        instance: Instance,
+        instance_id: str,
         user: User,
         password: User.Password = None
     ): return User(**json.loads(self.request(
-            f"/instances/{instance.id}/users/{user.name}", ClientAPI.Method.PATCH, data=user.dict() | {
+            f"/instances/{instance_id}/users/{user.name}", ClientAPI.Method.PATCH, data=user.dict() | {
                 "password": password})))
 
     @validate_arguments
-    def delete_user(self, instance: Instance, user: Database):
+    def delete_user(self, instance_id: str, user_name: str):
         self.request(
-            f"/instances/{instance.id}/users/{user.name}", ClientAPI.Method.DELETE, data=user.dict())
+            f"/instances/{instance_id}/users/{user_name}", ClientAPI.Method.DELETE)
 
     # PRIVILEGES
 
     @validate_arguments
     def list_privileges(
         self,
-        instance: Instance,
+        instance_id: str,
         database_name: str = None,
         user_name: str = None,
         ordering: Privileges.Ordering = Privileges.Ordering(),
         pagination: Pagination = Pagination()
     ): return [Privileges(**data) for data in json.loads(
-            self.request(f"/instances/{instance.id}/privileges", data={
+            self.request(f"/instances/{instance_id}/privileges", data={
                 "database_name": database_name, "user_name": user_name
             } | pagination.dict() | ordering.dict()))["privileges"]]
 
     @validate_arguments
-    def set_user_privileges(self, instance: Instance, privileges: Privileges):
+    def set_user_privileges(self, instance_id: str, privileges: Privileges):
         return Privileges(**json.loads(self.request(
-            f"/instances/{instance.id}/privileges", method=ClientAPI.Method.PUT, data=privileges.dict())))
+            f"/instances/{instance_id}/privileges", method=ClientAPI.Method.PUT, data=privileges.dict())))
 
 
 class RegistryClient(ClientAPI):
